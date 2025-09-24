@@ -1,0 +1,86 @@
+// Arduino code to control built-in LED using LDR (Light Dependent Resistor)
+// Works with any available resistor value
+
+// Define pins
+const int ldrPin = A0;         // Analog pin for LDR sensor
+const int ledPin = LED_BUILTIN; // Built-in LED (pin 13 on most Arduino boards)
+
+// Variables
+int lightValue = 0;            // Variable to store light level reading
+int threshold;                 // Threshold value for LED control (will be calibrated)
+int maxReading = 0;            // To store maximum light reading during calibration
+int minReading = 1023;         // To store minimum light reading during calibration
+
+void setup() {
+  // Initialize serial communication
+  Serial.begin(9600);
+  
+  // Set pin modes
+  pinMode(ldrPin, INPUT);      // LDR as input
+  pinMode(ledPin, OUTPUT);     // Built-in LED as output
+  
+  Serial.println("LDR Sensor with Built-in LED");
+  Serial.println("----------------------------");
+  
+  // Calibration sequence
+  Serial.println("Calibrating light sensor...");
+  Serial.println("Please expose the LDR to light and darkness over the next 5 seconds");
+  
+  // Turn on LED to indicate calibration is active
+  digitalWrite(ledPin, HIGH);
+  
+  // Calibration - sample light readings for 5 seconds
+  unsigned long startTime = millis();
+  while (millis() - startTime < 5000) {
+    lightValue = analogRead(ldrPin);
+    
+    // Update min and max values
+    if (lightValue > maxReading) {
+      maxReading = lightValue;
+    }
+    if (lightValue < minReading) {
+      minReading = lightValue;
+    }
+    
+    delay(100);  // Take readings every 100ms
+  }
+  
+  // Turn off LED to indicate calibration is complete
+  digitalWrite(ledPin, LOW);
+  
+  // Set threshold at 40% of the range from min to max
+  // This can be adjusted based on preference
+  threshold = minReading + ((maxReading - minReading) * 0.4);
+  
+  Serial.println("Calibration complete!");
+  Serial.print("Min reading: ");
+  Serial.println(minReading);
+  Serial.print("Max reading: ");
+  Serial.println(maxReading);
+  Serial.print("Threshold set to: ");
+  Serial.println(threshold);
+  Serial.println("----------------------------");
+}
+
+void loop() {
+  // Read the analog value from the LDR
+  lightValue = analogRead(ldrPin);
+  
+  // Print the light value to Serial Monitor
+  Serial.print("Light level: ");
+  Serial.print(lightValue);
+  
+  // Control the LED based on light level
+  if (lightValue < threshold) {
+    // It's dark, turn ON the LED
+    digitalWrite(ledPin, HIGH);
+    Serial.println(" - LED: ON");
+  } else {
+    // It's bright, turn OFF the LED
+    digitalWrite(ledPin, LOW);
+    Serial.println(" - LED: OFF");
+  }
+  
+  // Wait before next reading
+  delay(500);
+}
