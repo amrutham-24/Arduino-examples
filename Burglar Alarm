@@ -1,0 +1,24 @@
+int pirPin = 2;          // PIR sensor
+int buzzerPin = 9;       // Buzzer
+int ledPin = LED_BUILTIN; // Optional LED
+
+void setup() {
+  pinMode(pirPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int val = digitalRead(pirPin);
+
+  if (val == HIGH) {  // motion detected
+    Serial.println("Intruder detected!");
+    digitalWrite(buzzerPin, HIGH);  // turn on buzzer
+    digitalWrite(ledPin, HIGH);     // optional LED blink
+    delay(500);                     // alarm duration
+    digitalWrite(buzzerPin, LOW);
+    digitalWrite(ledPin, LOW);
+    delay(500);                     // pause before next check
+  }
+}
