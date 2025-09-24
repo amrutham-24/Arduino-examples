@@ -1,0 +1,34 @@
+const int irSensorPin = 7;
+int buzzerPin = 8;
+int yellowLED = 9;
+const int ledPin = 13; 
+
+void setup() {
+  Serial.begin(9600); 
+  pinMode(irSensorPin, INPUT); 
+  pinMode(ledPin, OUTPUT); 
+  pinMode(yellowLED, OUTPUT);
+}
+
+void loop() {
+  int sensorValue = digitalRead(irSensorPin);
+  // (often a LOW signal)
+  if (sensorValue == LOW) {
+    digitalWrite(ledPin, HIGH); 
+    digitalWrite(yellowLED, HIGH);
+  delay(500);
+    tone(buzzerPin, 1000); 
+  delay(50); 
+   
+  digitalWrite(yellowLED, LOW);          
+  noTone(buzzerPin);     
+  delay(50);          
+    Serial.println("Obstacle detected!");
+  } else {
+    digitalWrite(ledPin, LOW);
+
+    Serial.println("No obstacle.");
+  }
+  
+  delay(100); 
+}
