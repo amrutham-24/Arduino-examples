@@ -1,0 +1,22 @@
+#include <Servo.h>
+int pirPin = 2;           // PIR output pin
+Servo doorServo;       // create servo object
+int servoPin = 9;      // servo signal pin
+
+void setup() {
+  pinMode(pirPin, INPUT);
+  doorServo.attach(servoPin);   // attach servo to pin
+  doorServo.write(0);           // initial position (closed)
+  Serial.begin(9600);     // optional, for debugging
+}
+
+void loop() {
+  int val = digitalRead(pirPin); // read PIR sensor
+
+  if (val == HIGH) {             // motion detected
+    Serial.println("Motion detected!");
+    doorServo.write(90);        // open door
+    delay(500);                // keep open for 3 seconds
+     doorServo.write(0);         // close door
+  } 
+}
