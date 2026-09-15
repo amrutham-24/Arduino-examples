@@ -1,5 +1,10 @@
 # Arduino-examples
 CP210x VCP Windows : port error driver
+download the exact file from Silicon labs official page. Run the installer after extracting the .zip file.
+The error should be resolved in the Device Manager.
+
+In `smart_streetLamp_concept.ino`, the LDR readings were approximately **50 under direct flashlight**, **700–800 under dim light**, and **950+ when completely covered by hand**.
+
 
 
 ## Push Button Toggle LED Circuit - LED_CONTROL.ino
